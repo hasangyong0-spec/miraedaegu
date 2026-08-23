@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>미래에셋증권 투자센터대구WM · 센터 스케줄 현황표</title>
+<title>투자센터대구WM 스케줄현황표</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -67,9 +67,6 @@ button{cursor:pointer;border:none;background:none}
   background:#fff;color:var(--body);font-size:15px;line-height:1;display:inline-flex;
   align-items:center;justify-content:center;transition:.12s}
 .navbtn:hover{background:var(--surface);border-color:var(--gray);color:var(--ink)}
-.btn-today{border:1px solid var(--hair);border-radius:var(--r-xs);background:#fff;
-  padding:7px 14px;font-size:14px;font-weight:500;transition:.12s}
-.btn-today:hover{background:var(--surface);border-color:var(--gray)}
 .month-strip{display:grid;grid-template-columns:repeat(12,1fr);gap:3px;max-width:520px}
 .mbtn{padding:4px 0;font-size:12.5px;font-weight:500;border:1px solid var(--hair);
   background:#fff;color:var(--muted);border-radius:var(--r-xs);transition:.12s;white-space:nowrap}
@@ -101,9 +98,9 @@ button{cursor:pointer;border:none;background:none}
 .chip{display:block;line-height:1.3;color:var(--ink);border-left:3px solid var(--gray);
   padding:3px 5px;background:var(--surface);border-radius:0 var(--r-xs) var(--r-xs) 0;overflow:hidden}
 .chip .t{display:block;font-family:var(--font-num);font-variant-numeric:tabular-nums;
-  font-weight:700;color:var(--orange-active);font-size:11px;letter-spacing:-.2px}
+  font-weight:700;font-size:11px;letter-spacing:-.2px;opacity:.85}
 .chip .n{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;
-  font-size:12px;font-weight:600;overflow-wrap:anywhere;word-break:break-word}
+  font-size:12px;font-weight:700;overflow-wrap:anywhere;word-break:break-word}
 .more{font-size:11px;color:var(--muted);font-weight:600;padding-left:3px}
 .legend{display:flex;gap:16px;flex-wrap:wrap;padding:12px 20px;border-top:1px solid var(--hair-soft);
   font-size:13px;color:var(--muted)}
@@ -250,7 +247,7 @@ textarea.note:focus{border-color:var(--orange);box-shadow:0 0 0 2px rgba(245,130
   body{background:#fff;font-size:11pt}
   .topbar{background:#fff;color:#000;border-bottom:2px solid var(--orange)}
   .brand-mark{color:var(--orange)} .brand-sub{color:#000} .clock,.conn{display:none}
-  .cal-ctrl .ctrl-row .navbtn,.btn-today,.month-strip,.qtabs .qtab[aria-pressed="false"]{display:none}
+  .cal-ctrl .ctrl-row .navbtn,.month-strip,.qtabs .qtab[aria-pressed="false"]{display:none}
   .btn,.x,.ev-acts{display:none!important}
   .page{max-width:100%;padding:12px}
   .layout{grid-template-columns:1fr 1fr;gap:12px}
@@ -267,7 +264,7 @@ textarea.note:focus{border-color:var(--orange);box-shadow:0 0 0 2px rgba(245,130
     <div class="brand">
       <span class="brand-mark">MIRAE ASSET 미래에셋증권</span>
       <span class="brand-div">|</span>
-      <span class="brand-sub">투자센터대구WM 센터 스케줄 현황표</span>
+      <span class="brand-sub">투자센터대구WM 스케줄현황표</span>
     </div>
     <div class="topbar-right">
       <span class="clock" id="clock">&nbsp;</span>
@@ -290,7 +287,6 @@ textarea.note:focus{border-color:var(--orange);box-shadow:0 0 0 2px rgba(245,130
           <div class="ymlabel"><span class="y num" id="lbl-y">2026년</span><span class="num" id="lbl-m">8월</span></div>
           <button class="navbtn" id="next-m" title="다음 달">›</button>
           <button class="navbtn" id="next-y" title="다음 연도">»</button>
-          <button class="btn-today" id="btn-today">오늘</button>
         </div>
         <div class="month-strip" id="mstrip"></div>
       </div>
@@ -420,13 +416,15 @@ const eventsRef = ref(db, ROOT + '/events');
 const focusRef  = ref(db, ROOT + '/focus');
 
 /* ── 상수 ── */
+/* color = 태그·범례·달력 좌측 띠 / ink = 달력 일정명 글자색 */
 const TYPES = [
-  { key:'세미나', color:'#F58220' },
-  { key:'교육',   color:'#043B72' },
-  { key:'회의',   color:'#0086B8' },
-  { key:'기타',   color:'#84888B' }
+  { key:'세미나', color:'#F58220', ink:'#CB6015' },   // 주황
+  { key:'교육',   color:'#043B72', ink:'#043B72' },   // 파랑
+  { key:'회의',   color:'#6DB33F', ink:'#4A7C1C' },   // 연두
+  { key:'기타',   color:'#84888B', ink:'#6C6C6C' }    // 회색
 ];
 const COLOR = Object.fromEntries(TYPES.map(t => [t.key, t.color]));
+const INK   = Object.fromEntries(TYPES.map(t => [t.key, t.ink]));
 const DOW   = ['일','월','화','수','목','금','토'];
 const FIELDS = ['quarterly','detail','message'];
 const FIELD_KO = { quarterly:'분기 중점사항', detail:'분기 프로모션', message:'센터장 전달사항' };
@@ -519,7 +517,7 @@ function renderCalendar(){
     const cls = ['cell', dow===0?'sun':'', dow===6?'sat':'',
                  ds===TODAY?'today':'', evs.length?'has':''].filter(Boolean).join(' ');
     const shown = evs.slice(0,3).map(e => `
-      <span class="chip" style="border-left-color:${COLOR[e.type]||'#84888B'}">
+      <span class="chip" style="border-left-color:${COLOR[e.type]||'#84888B'};color:${INK[e.type]||'#6C6C6C'}">
         ${e.time ? `<span class="t">${esc(e.time)}</span>` : ''}<span class="n">${esc(e.title)}</span>
       </span>`).join('');
     const more = evs.length > 3 ? `<span class="more">+${evs.length-3}건 더</span>` : '';
@@ -803,7 +801,6 @@ $('prev-m').onclick  = () => goMonth(st.month === 0 ? st.year-1 : st.year, st.mo
 $('next-m').onclick  = () => goMonth(st.month === 11 ? st.year+1 : st.year, st.month+1);
 $('prev-y').onclick  = () => goMonth(st.year-1, st.month);
 $('next-y').onclick  = () => goMonth(st.year+1, st.month);
-$('btn-today').onclick = () => goMonth(+TODAY.slice(0,4), +TODAY.slice(5,7)-1);
 $('modal-x').onclick = closeModal;
 $('backdrop').addEventListener('click', e => { if(e.target === $('backdrop')) closeModal(); });
 $('f-save').onclick   = saveEvent;
