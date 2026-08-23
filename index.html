@@ -116,7 +116,8 @@ button{cursor:pointer;border:none;background:none}
 .ml-table{width:100%;min-width:600px;border-collapse:collapse}
 .ml-table th{background:var(--orange-soft);color:#1A1A1A;font-weight:700;font-size:14px;
   text-align:left;padding:9px 11px;border:1px solid var(--hair);white-space:nowrap}
-.ml-table td{padding:10px 11px;border:1px solid var(--hair-soft);vertical-align:middle;font-size:15px}
+.ml-table td{padding:10px 11px;border:1px solid var(--hair-soft);vertical-align:middle;
+  font-size:15px;white-space:nowrap}
 .ml-table tr{cursor:pointer;transition:.1s}
 .ml-table tbody tr:hover td{background:var(--surface)}
 .ml-d{font-family:var(--font-num);font-variant-numeric:tabular-nums;white-space:nowrap;
@@ -124,7 +125,8 @@ button{cursor:pointer;border:none;background:none}
 .ml-d .w{font-family:var(--font-kr);font-size:13px;font-weight:500;color:var(--muted);margin-left:3px}
 tr.sun .ml-d,tr.sun .ml-d .w{color:var(--error)}
 tr.sat .ml-d,tr.sat .ml-d .w{color:var(--navy)}
-.ml-name{font-size:16px;font-weight:700;color:var(--ink);letter-spacing:-.2px}
+.ml-name{font-size:16px;font-weight:700;color:var(--ink);letter-spacing:-.2px;
+  white-space:nowrap;min-width:180px}
 .ml-time{font-family:var(--font-num);font-variant-numeric:tabular-nums;font-size:15px;
   font-weight:700;color:var(--orange-active);white-space:nowrap}
 .ml-sub{color:var(--muted)}
@@ -230,11 +232,11 @@ textarea.note:focus{border-color:var(--orange);box-shadow:0 0 0 2px rgba(245,130
   .more{font-size:9.5px;padding-left:2px}
   .ymlabel{font-size:22px;min-width:0}
   .ml-hint{display:inline}
-  .ml-table{min-width:540px}
+  .ml-table{min-width:560px}
   .ml-table th{font-size:13px;padding:8px 9px}
   .ml-table td{font-size:14px;padding:9px}
   .ml-d{font-size:14.5px}
-  .ml-name{font-size:15px}
+  .ml-name{font-size:15px;min-width:0}
   .ml-time{font-size:14px}
   textarea.note{font-size:15.5px}
   .f2{grid-template-columns:1fr}
