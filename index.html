@@ -41,16 +41,16 @@ button{cursor:pointer;border:none;background:none}
 .topbar-right{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
 .clock{font-family:var(--font-num);font-variant-numeric:tabular-nums;font-size:14px;
   color:#D8E2EC;border:1px solid #24547F;padding:5px 11px;border-radius:var(--r-xs);background:#0A3060}
-.conn{font-size:13px;font-weight:500;padding:5px 11px;border-radius:var(--r-xs);
-  border:1px solid #24547F;background:#0A3060;color:#D8E2EC;white-space:nowrap}
+.conn{font-size:11px;font-weight:500;padding:3px 8px;border-radius:var(--r-xs);
+  border:1px solid #24547F;background:#0A3060;color:#B9CBDC;white-space:nowrap}
 .conn[data-on="1"]{border-color:#2E8540;color:#9FE0B0}
-.conn .dot{display:inline-block;width:7px;height:7px;border-radius:50%;background:var(--gray);margin-right:6px;vertical-align:1px}
+.conn .dot{display:inline-block;width:6px;height:6px;border-radius:50%;background:var(--gray);margin-right:5px;vertical-align:1px}
 .conn[data-on="1"] .dot{background:#37B24D}
 
 /* ── Layout ────────────────────────────── */
 .page{max-width:1440px;margin:0 auto;padding:24px 28px 56px}
 .layout{display:grid;grid-template-columns:minmax(0,1.55fr) minmax(340px,1fr);gap:22px;align-items:start}
-.card{background:var(--canvas);border:1px solid var(--hair);border-radius:var(--r-sm)}
+.card{background:var(--canvas);border:1px solid var(--hair);border-radius:var(--r-sm);min-width:0}
 .card-rule{height:1px;background:var(--orange)}
 .card-head{display:flex;align-items:center;justify-content:space-between;gap:12px;
   padding:15px 20px;border-bottom:1px solid var(--hair-soft);flex-wrap:wrap}
@@ -70,8 +70,8 @@ button{cursor:pointer;border:none;background:none}
 .btn-today{border:1px solid var(--hair);border-radius:var(--r-xs);background:#fff;
   padding:7px 14px;font-size:14px;font-weight:500;transition:.12s}
 .btn-today:hover{background:var(--surface);border-color:var(--gray)}
-.month-strip{display:grid;grid-template-columns:repeat(12,1fr);gap:4px}
-.mbtn{padding:7px 0;font-size:14px;font-weight:500;border:1px solid var(--hair);
+.month-strip{display:grid;grid-template-columns:repeat(12,1fr);gap:3px;max-width:520px}
+.mbtn{padding:4px 0;font-size:12.5px;font-weight:500;border:1px solid var(--hair);
   background:#fff;color:var(--muted);border-radius:var(--r-xs);transition:.12s;white-space:nowrap}
 .mbtn:hover{background:var(--surface);color:var(--ink)}
 .mbtn[aria-pressed="true"]{background:var(--orange);border-color:var(--orange);color:#fff;font-weight:700}
@@ -98,28 +98,42 @@ button{cursor:pointer;border:none;background:none}
 .cell.today .dnum{background:var(--orange);color:#fff;border-radius:var(--r-xs);
   padding:2px 7px;display:inline-block;align-self:flex-start}
 .cell.has{background:#FFFDFA}
-.chip{display:flex;align-items:flex-start;gap:5px;font-size:12.5px;line-height:1.35;
-  color:var(--ink);border-left:3px solid var(--gray);padding:2px 4px;background:var(--surface);
-  border-radius:0 var(--r-xs) var(--r-xs) 0;overflow:hidden}
-.chip .t{font-family:var(--font-num);font-weight:600;color:var(--muted);flex-shrink:0;font-size:11.5px;padding-top:.5px}
-.chip .n{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-weight:500}
-.more{font-size:11.5px;color:var(--muted);font-weight:500;padding-left:4px}
-.legend{display:flex;gap:16px;flex-wrap:wrap;padding:14px 20px;border-top:1px solid var(--hair-soft);
-  font-size:13.5px;color:var(--muted)}
+.chip{display:block;line-height:1.3;color:var(--ink);border-left:3px solid var(--gray);
+  padding:3px 5px;background:var(--surface);border-radius:0 var(--r-xs) var(--r-xs) 0;overflow:hidden}
+.chip .t{display:block;font-family:var(--font-num);font-variant-numeric:tabular-nums;
+  font-weight:700;color:var(--orange-active);font-size:11px;letter-spacing:-.2px}
+.chip .n{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;
+  font-size:12px;font-weight:600;overflow-wrap:anywhere;word-break:break-word}
+.more{font-size:11px;color:var(--muted);font-weight:600;padding-left:3px}
+.legend{display:flex;gap:16px;flex-wrap:wrap;padding:12px 20px;border-top:1px solid var(--hair-soft);
+  font-size:13px;color:var(--muted)}
 .legend span{display:inline-flex;align-items:center;gap:6px}
 .legend i{width:11px;height:11px;border-radius:var(--r-xs);display:inline-block}
 
 /* ── Month list ────────────────────────── */
-.mlist{padding:4px 20px 20px}
-.mlist h3{font-size:15px;font-weight:700;color:var(--ink);padding:14px 0 10px}
-.mlist table{width:100%;border-collapse:collapse;font-size:14.5px}
-.mlist th{background:var(--orange-soft);color:#1A1A1A;font-weight:700;font-size:13.5px;
-  text-align:left;padding:8px 10px;border:1px solid var(--hair)}
-.mlist td{padding:8px 10px;border:1px solid var(--hair-soft);vertical-align:top}
-.mlist tr:hover td{background:var(--surface)}
-.mlist .d{font-family:var(--font-num);font-variant-numeric:tabular-nums;white-space:nowrap;font-weight:600}
-.mlist .empty{color:var(--muted);font-size:14px;padding:18px 0;text-align:center}
-.tag{display:inline-block;font-size:12px;font-weight:700;color:#fff;padding:2px 7px;border-radius:var(--r-xs);white-space:nowrap}
+.mlist{padding:2px 20px 20px}
+.mlist h3{font-size:16px;font-weight:700;color:var(--ink);padding:16px 0 10px;
+  border-top:1px solid var(--hair-soft);margin-top:2px}
+.ml-scroll{overflow-x:auto;-webkit-overflow-scrolling:touch}
+.ml-hint{display:none;font-size:12px;font-weight:500;color:var(--muted-soft);margin-left:8px}
+.ml-table{width:100%;min-width:600px;border-collapse:collapse}
+.ml-table th{background:var(--orange-soft);color:#1A1A1A;font-weight:700;font-size:14px;
+  text-align:left;padding:9px 11px;border:1px solid var(--hair);white-space:nowrap}
+.ml-table td{padding:10px 11px;border:1px solid var(--hair-soft);vertical-align:middle;font-size:15px}
+.ml-table tr{cursor:pointer;transition:.1s}
+.ml-table tbody tr:hover td{background:var(--surface)}
+.ml-d{font-family:var(--font-num);font-variant-numeric:tabular-nums;white-space:nowrap;
+  font-weight:700;font-size:15.5px;color:var(--ink)}
+.ml-d .w{font-family:var(--font-kr);font-size:13px;font-weight:500;color:var(--muted);margin-left:3px}
+tr.sun .ml-d,tr.sun .ml-d .w{color:var(--error)}
+tr.sat .ml-d,tr.sat .ml-d .w{color:var(--navy)}
+.ml-name{font-size:16px;font-weight:700;color:var(--ink);letter-spacing:-.2px}
+.ml-time{font-family:var(--font-num);font-variant-numeric:tabular-nums;font-size:15px;
+  font-weight:700;color:var(--orange-active);white-space:nowrap}
+.ml-sub{color:var(--muted)}
+.mlist .empty{color:var(--muted);font-size:14.5px;padding:22px 0;text-align:center;
+  border:1px dashed var(--hair);border-radius:var(--r-sm)}
+.tag{display:inline-block;font-size:12px;font-weight:700;color:#fff;padding:2px 8px;border-radius:var(--r-xs);white-space:nowrap}
 
 /* ── Right column ──────────────────────── */
 .col-side{display:flex;flex-direction:column;gap:16px;position:sticky;top:16px}
@@ -136,8 +150,9 @@ button{cursor:pointer;border:none;background:none}
 .panel .card-title{font-size:17px}
 .panel-body{padding:14px 16px 16px}
 textarea.note{width:100%;min-height:150px;resize:vertical;border:1px solid var(--hair);
-  border-radius:var(--r-xs);padding:12px 13px;font-size:15.5px;line-height:1.7;background:#fff;
-  color:var(--body);outline:none;transition:.12s}
+  border-radius:var(--r-xs);padding:12px 13px;font-size:16px;font-weight:600;line-height:1.75;
+  background:#fff;color:var(--orange-active);outline:none;transition:.12s;letter-spacing:-.2px}
+textarea.note::placeholder{font-size:15px;font-weight:400;color:var(--muted-soft);letter-spacing:0}
 textarea.note:focus{border-color:var(--orange);box-shadow:0 0 0 2px rgba(245,130,32,.15)}
 .panel-foot{display:flex;align-items:center;justify-content:space-between;gap:10px;
   margin-top:10px;flex-wrap:wrap}
@@ -202,18 +217,29 @@ textarea.note:focus{border-color:var(--orange);box-shadow:0 0 0 2px rgba(245,130
 
 /* ── Responsive ────────────────────────── */
 @media (max-width:1100px){
-  .layout{grid-template-columns:1fr}
-  .col-side{position:static}
+  .layout{grid-template-columns:minmax(0,1fr)}
+  .col-side{position:static;min-width:0}
 }
 @media (max-width:720px){
   .topbar-in,.page{padding-left:16px;padding-right:16px}
   .card-head,.cal-ctrl,.cal-wrap,.mlist{padding-left:14px;padding-right:14px}
-  .month-strip{grid-template-columns:repeat(6,1fr)}
-  .cell{min-height:78px;padding:5px 4px}
-  .cell .dnum{font-size:13.5px}
-  .chip .t{display:none}
-  .chip{font-size:11px;padding:1px 3px}
+  .month-strip{grid-template-columns:repeat(6,1fr);max-width:none}
+  .mbtn{font-size:12px;padding:4px 0}
+  .cell{min-height:92px;padding:4px 2px;gap:3px}
+  .cell .dnum{font-size:13px}
+  .chip{padding:1px 2px 2px;border-left-width:2px}
+  .chip .t{font-size:9.5px;letter-spacing:-.4px}
+  .chip .n{display:block;font-size:10px;line-height:1.3;font-weight:700;letter-spacing:-.4px}
+  .more{font-size:9.5px;padding-left:2px}
   .ymlabel{font-size:22px;min-width:0}
+  .ml-hint{display:inline}
+  .ml-table{min-width:540px}
+  .ml-table th{font-size:13px;padding:8px 9px}
+  .ml-table td{font-size:14px;padding:9px}
+  .ml-d{font-size:14.5px}
+  .ml-name{font-size:15px}
+  .ml-time{font-size:14px}
+  textarea.note{font-size:15.5px}
   .f2{grid-template-columns:1fr}
   .type-row{grid-template-columns:repeat(2,1fr)}
   .qgrid{grid-template-columns:repeat(4,1fr)}
@@ -256,9 +282,6 @@ textarea.note:focus{border-color:var(--orange);box-shadow:0 0 0 2px rgba(245,130
     <!-- ═══ 좌: 달력 ═══ -->
     <section class="card">
       <div class="card-rule"></div>
-      <div class="card-head">
-        <h1 class="card-title">센터 일정 달력<span class="sub">날짜를 클릭해 일정을 등록·수정·삭제합니다</span></h1>
-      </div>
 
       <div class="cal-ctrl">
         <div class="ctrl-row">
@@ -303,9 +326,9 @@ textarea.note:focus{border-color:var(--orange);box-shadow:0 0 0 2px rgba(245,130
 
       <section class="card panel">
         <div class="card-rule"></div>
-        <div class="card-head"><h2 class="card-title">세부 중점사항</h2></div>
+        <div class="card-head"><h2 class="card-title">분기 프로모션</h2></div>
         <div class="panel-body">
-          <textarea class="note" id="ta-detail" data-k="detail" placeholder="실행 과제·목표 수치 등 세부 사항을 입력하세요."></textarea>
+          <textarea class="note" id="ta-detail" data-k="detail" placeholder="해당 분기 프로모션 내용·기간·대상을 입력하세요."></textarea>
           <div class="panel-foot">
             <span class="stamp" id="st-detail">—</span>
             <button class="btn btn-primary btn-sm" data-save="detail" disabled>저장</button>
@@ -406,7 +429,7 @@ const TYPES = [
 const COLOR = Object.fromEntries(TYPES.map(t => [t.key, t.color]));
 const DOW   = ['일','월','화','수','목','금','토'];
 const FIELDS = ['quarterly','detail','message'];
-const FIELD_KO = { quarterly:'분기 중점사항', detail:'세부 중점사항', message:'센터장 전달사항' };
+const FIELD_KO = { quarterly:'분기 중점사항', detail:'분기 프로모션', message:'센터장 전달사항' };
 
 /* ── 상태 ── */
 const todayKST = () => new Intl.DateTimeFormat('en-CA',
@@ -462,8 +485,7 @@ function buildMonthStrip(){
 }
 function buildLegend(){
   $('legend').innerHTML = TYPES.map(t =>
-    `<span><i style="background:${t.color}"></i>${t.key}</span>`).join('') +
-    `<span style="margin-left:auto;color:var(--muted-soft)">모든 입력은 센터 전직원에게 실시간 공유됩니다</span>`;
+    `<span><i style="background:${t.color}"></i>${t.key}</span>`).join('');
 }
 function eventsOn(dateStr){
   return Object.entries(st.events)
@@ -518,26 +540,27 @@ function renderMonthList(){
     .sort((a,b) => a.date.localeCompare(b.date)
                 || (a.time||'99:99').localeCompare(b.time||'99:99'));
 
-  $('mlist-h').textContent = `${st.year}년 ${st.month+1}월 일정 (${list.length}건)`;
+  $('mlist-h').innerHTML = `${st.year}년 ${st.month+1}월 일정 (${list.length}건)` +
+    (list.length ? `<span class="ml-hint">좌우로 밀면 장소·대상까지 보입니다</span>` : '');
   if(!list.length){
     $('mlist-body').innerHTML = `<div class="empty">등록된 일정이 없습니다. 달력에서 날짜를 클릭해 등록하세요.</div>`;
     return;
   }
-  $('mlist-body').innerHTML = `
-    <table><thead><tr>
-      <th style="width:88px">일자</th><th style="width:72px">구분</th>
-      <th>일정명</th><th style="width:64px">시간</th><th style="width:130px">장소</th><th style="width:120px">대상</th>
+  $('mlist-body').innerHTML = `<div class="ml-scroll"><table class="ml-table">
+    <thead><tr>
+      <th style="width:86px">일자</th><th style="width:74px">구분</th><th>일정명</th>
+      <th style="width:74px">시간</th><th style="width:150px">장소</th><th style="width:130px">대상</th>
     </tr></thead><tbody>` + list.map(e => {
-      const d = new Date(e.date + 'T00:00:00');
-      return `<tr data-d="${e.date}" style="cursor:pointer">
-        <td class="d">${e.date.slice(5).replace('-','.')} (${DOW[d.getDay()]})</td>
+      const dow = new Date(e.date + 'T00:00:00').getDay();
+      return `<tr class="${dow===0?'sun':''}${dow===6?'sat':''}" data-d="${e.date}">
+        <td class="ml-d">${e.date.slice(5).replace('-','.')}<span class="w">${DOW[dow]}</span></td>
         <td><span class="tag" style="background:${COLOR[e.type]||'#84888B'}">${esc(e.type)}</span></td>
-        <td style="font-weight:600;color:var(--ink)">${esc(e.title)}</td>
-        <td class="d">${esc(e.time || '-')}</td>
-        <td>${esc(e.place || '-')}</td>
-        <td>${esc(e.target || '-')}</td>
+        <td class="ml-name">${esc(e.title)}</td>
+        <td class="ml-time">${esc(e.time || '-')}</td>
+        <td class="ml-sub">${esc(e.place || '-')}</td>
+        <td class="ml-sub">${esc(e.target || '-')}</td>
       </tr>`;
-    }).join('') + `</tbody></table>`;
+    }).join('') + `</tbody></table></div>`;
   $('mlist-body').querySelectorAll('tr[data-d]').forEach(r =>
     r.addEventListener('click', () => openModal(r.dataset.d)));
 }
@@ -708,6 +731,35 @@ function renderQuarter(){
     }
   });
 }
+/* 목록 자동 번호 매기기 (1. 2. 3. …) */
+function renumber(lines, activeIdx = -1){
+  let n = 0;
+  return lines.map((l, i) => {
+    const body = l.replace(/^\s*\d{1,2}[.)]\s*/, '');   // 연도(2026.) 등은 건드리지 않음
+    if(!body.trim() && i !== activeIdx) return '';
+    n++;
+    return `${n}. ${body}`;
+  });
+}
+function applyNumbering(ta){
+  const before = ta.value;
+  const next = renumber(before.split('\n')).join('\n').replace(/\n+$/, '');
+  if(next !== before) ta.value = next;
+}
+function handleListEnter(ta, k, e){
+  e.preventDefault();
+  const v = ta.value, s = ta.selectionStart, eSel = ta.selectionEnd;
+  const merged = v.slice(0, s) + '\n' + v.slice(eSel);
+  const active = v.slice(0, s).split('\n').length;          // 새로 만들어진 줄의 인덱스
+  const lines  = renumber(merged.split('\n'), active);
+  ta.value = lines.join('\n');
+  let pos = 0;
+  for(let i = 0; i < active; i++) pos += lines[i].length + 1;
+  pos += (lines[active] || '').length;
+  ta.setSelectionRange(pos, pos);
+  markDirty(k);
+}
+
 function markDirty(k){
   st.dirty[k] = true;
   $('st-' + k).textContent = '저장되지 않은 변경이 있습니다';
@@ -715,6 +767,7 @@ function markDirty(k){
   document.querySelector(`[data-save="${k}"]`).disabled = false;
 }
 async function saveFocus(k){
+  applyNumbering($('ta-' + k));
   const text = $('ta-' + k).value;
   const at = Date.now();
   const btn = document.querySelector(`[data-save="${k}"]`); btn.disabled = true;
@@ -758,9 +811,12 @@ $('f-cancel').onclick = () => { resetForm(); renderEventList(); };
 $('f-title').addEventListener('keydown', e => { if(e.key === 'Enter') saveEvent(); });
 document.addEventListener('keydown', e => { if(e.key === 'Escape' && st.modalDate) closeModal(); });
 FIELDS.forEach(k => {
-  $('ta-' + k).addEventListener('input', () => markDirty(k));
-  $('ta-' + k).addEventListener('keydown', e => {
-    if((e.metaKey || e.ctrlKey) && e.key === 'Enter'){ e.preventDefault(); saveFocus(k); }
+  const ta = $('ta-' + k);
+  ta.addEventListener('input', () => markDirty(k));
+  ta.addEventListener('blur', () => { if(st.dirty[k]) applyNumbering(ta); });
+  ta.addEventListener('keydown', e => {
+    if((e.metaKey || e.ctrlKey) && e.key === 'Enter'){ e.preventDefault(); saveFocus(k); return; }
+    if(e.key === 'Enter' && !e.shiftKey && !e.metaKey && !e.ctrlKey) handleListEnter(ta, k, e);
   });
 });
 document.querySelectorAll('[data-save]').forEach(b =>
