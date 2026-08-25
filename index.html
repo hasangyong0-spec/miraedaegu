@@ -155,6 +155,16 @@ textarea.note{width:100%;min-height:160px;resize:vertical;overflow:hidden;border
   letter-spacing:-.2px}
 textarea.note::placeholder{font-size:15px;font-weight:400;color:var(--muted-soft);letter-spacing:0}
 textarea.note:focus{border-color:var(--orange);box-shadow:0 0 0 2px rgba(245,130,32,.15)}
+/* 읽기 화면 — 번호는 번호칸, 본문은 본문칸에 정렬(줄바꿈해도 번호 아래로 내려가지 않음) */
+.note-view{min-height:160px;border:1px solid var(--hair);border-radius:var(--r-xs);
+  padding:12px 13px;background:#fff;cursor:text;transition:border-color .12s}
+.note-view:hover{border-color:var(--gray)}
+.nv-item{display:grid;grid-template-columns:1.85em 1fr;font-size:16px;font-weight:600;
+  line-height:1.75;color:var(--orange-active);letter-spacing:-.2px}
+.nv-item + .nv-item{margin-top:3px}
+.nv-num{font-family:var(--font-num);font-variant-numeric:tabular-nums;font-weight:700}
+.nv-txt{overflow-wrap:anywhere;word-break:break-word}
+.nv-empty{font-size:15px;font-weight:400;color:var(--muted-soft);letter-spacing:0}
 .panel-foot{display:flex;align-items:center;justify-content:space-between;gap:10px;
   margin-top:10px;flex-wrap:wrap}
 .stamp{font-size:12.5px;color:var(--muted-soft)}
@@ -241,6 +251,8 @@ textarea.note:focus{border-color:var(--orange);box-shadow:0 0 0 2px rgba(245,130
   .ml-name{font-size:15px;min-width:0}
   .ml-time{font-size:14px}
   textarea.note{font-size:15.5px;min-height:230px;line-height:1.8}
+  .note-view{min-height:230px}
+  .nv-item{font-size:15.5px;line-height:1.8;grid-template-columns:1.75em 1fr}
   .panel .card-head{padding:14px 16px}
   .panel-body{padding:14px 16px 18px}
   .f2{grid-template-columns:1fr}
@@ -260,6 +272,7 @@ textarea.note:focus{border-color:var(--orange);box-shadow:0 0 0 2px rgba(245,130
   .card{break-inside:avoid;border-color:#999}
   .backdrop{display:none!important}
   textarea.note{border-color:#999;min-height:auto;height:auto}
+  .note-view{border-color:#999;min-height:auto}
 }
 </style>
 </head>
@@ -318,10 +331,12 @@ textarea.note:focus{border-color:var(--orange);box-shadow:0 0 0 2px rgba(245,130
         <div class="card-rule"></div>
         <div class="card-head"><h2 class="card-title">분기 중점사항</h2></div>
         <div class="panel-body">
-          <textarea class="note" id="ta-quarterly" data-k="quarterly" placeholder="해당 분기 센터 중점 추진 방향을 입력하세요."></textarea>
+          <div class="note-view" id="view-quarterly"></div>
+          <textarea class="note" id="ta-quarterly" data-k="quarterly" hidden
+            placeholder="해당 분기 센터 중점 추진 방향을 입력하세요."></textarea>
           <div class="panel-foot">
             <span class="stamp" id="st-quarterly">—</span>
-            <button class="btn btn-primary btn-sm" data-save="quarterly" disabled>저장</button>
+            <button class="btn btn-ghost btn-sm" id="btn-quarterly">수정</button>
           </div>
         </div>
       </section>
@@ -330,10 +345,12 @@ textarea.note:focus{border-color:var(--orange);box-shadow:0 0 0 2px rgba(245,130
         <div class="card-rule"></div>
         <div class="card-head"><h2 class="card-title">분기 프로모션</h2></div>
         <div class="panel-body">
-          <textarea class="note" id="ta-detail" data-k="detail" placeholder="해당 분기 프로모션 내용·기간·대상을 입력하세요."></textarea>
+          <div class="note-view" id="view-detail"></div>
+          <textarea class="note" id="ta-detail" data-k="detail" hidden
+            placeholder="해당 분기 프로모션 내용·기간·대상을 입력하세요."></textarea>
           <div class="panel-foot">
             <span class="stamp" id="st-detail">—</span>
-            <button class="btn btn-primary btn-sm" data-save="detail" disabled>저장</button>
+            <button class="btn btn-ghost btn-sm" id="btn-detail">수정</button>
           </div>
         </div>
       </section>
@@ -342,10 +359,12 @@ textarea.note:focus{border-color:var(--orange);box-shadow:0 0 0 2px rgba(245,130
         <div class="card-rule"></div>
         <div class="card-head"><h2 class="card-title">센터장 전달사항</h2></div>
         <div class="panel-body">
-          <textarea class="note" id="ta-message" data-k="message" placeholder="센터장 전달·공지 사항을 입력하세요."></textarea>
+          <div class="note-view" id="view-message"></div>
+          <textarea class="note" id="ta-message" data-k="message" hidden
+            placeholder="센터장 전달·공지 사항을 입력하세요."></textarea>
           <div class="panel-foot">
             <span class="stamp" id="st-message">—</span>
-            <button class="btn btn-primary btn-sm" data-save="message" disabled>저장</button>
+            <button class="btn btn-ghost btn-sm" id="btn-message">수정</button>
           </div>
         </div>
       </section>
@@ -436,6 +455,11 @@ const INK   = Object.fromEntries(TYPES.map(t => [t.key, t.ink]));
 const DOW   = ['일','월','화','수','목','금','토'];
 const FIELDS = ['quarterly','detail','message'];
 const FIELD_KO = { quarterly:'분기 중점사항', detail:'분기 프로모션', message:'센터장 전달사항' };
+const FIELD_PH = {
+  quarterly:'해당 분기 센터 중점 추진 방향을 입력하세요.',
+  detail:'해당 분기 프로모션 내용·기간·대상을 입력하세요.',
+  message:'센터장 전달·공지 사항을 입력하세요.'
+};
 
 /* ── 상태 ── */
 const todayKST = () => new Intl.DateTimeFormat('en-CA',
@@ -453,7 +477,8 @@ const st = {
   editingId: null,
   formType: '세미나',
   confirmId: null,
-  dirty: { quarterly:false, detail:false, message:false }
+  dirty:   { quarterly:false, detail:false, message:false },
+  editing: { quarterly:false, detail:false, message:false }
 };
 const qKey = () => `${st.year}-Q${st.quarter}`;
 
@@ -733,10 +758,41 @@ function renderQuarter(){
       ta.value = rec.text || '';
       $('st-' + k).textContent = stampText(rec.at);
       $('st-' + k).classList.remove('dirty');
-      document.querySelector(`[data-save="${k}"]`).disabled = true;
+      setEditing(k, false);
     }
+    renderNoteView(k);
     autoGrow(ta);
   });
+}
+
+/* 읽기 화면 그리기 — 번호칸과 본문칸을 분리해 줄바꿈 시에도 정렬 유지 */
+function renderNoteView(k){
+  const lines = $('ta-' + k).value.split('\n').filter(l => l.trim());
+  const box = $('view-' + k);
+  if(!lines.length){
+    box.innerHTML = `<div class="nv-empty">${esc(FIELD_PH[k])}</div>`;
+    return;
+  }
+  box.innerHTML = lines.map(l => {
+    const m = l.match(/^\s*(\d{1,2})[.)]\s*(.*)$/);
+    return `<div class="nv-item"><span class="nv-num">${m ? m[1] + '.' : ''}</span>` +
+           `<span class="nv-txt">${esc(m ? m[2] : l)}</span></div>`;
+  }).join('');
+}
+function setEditing(k, on){
+  st.editing[k] = on;
+  $('ta-' + k).hidden   = !on;
+  $('view-' + k).hidden = on;
+  const btn = $('btn-' + k);
+  btn.textContent = on ? '저장' : '수정';
+  btn.className   = 'btn btn-sm ' + (on ? 'btn-primary' : 'btn-ghost');
+}
+function startEditNote(k){
+  if(st.editing[k]) return;
+  setEditing(k, true);
+  const ta = $('ta-' + k);
+  autoGrow(ta); ta.focus();
+  ta.setSelectionRange(ta.value.length, ta.value.length);
 }
 /* 입력 칸이 내용 길이에 맞춰 세로로 늘어나도록 */
 function autoGrow(ta){
@@ -779,23 +835,23 @@ function markDirty(k){
   st.dirty[k] = true;
   $('st-' + k).textContent = '저장되지 않은 변경이 있습니다';
   $('st-' + k).classList.add('dirty');
-  document.querySelector(`[data-save="${k}"]`).disabled = false;
 }
 async function saveFocus(k){
   applyNumbering($('ta-' + k));
   const text = $('ta-' + k).value;
   const at = Date.now();
-  const btn = document.querySelector(`[data-save="${k}"]`); btn.disabled = true;
+  const btn = $('btn-' + k); btn.disabled = true;
   try{
     await update(child(focusRef, qKey()), { [k]: { text, at } });
     st.dirty[k] = false;
-    autoGrow($('ta-' + k));
+    renderNoteView(k);
+    setEditing(k, false);
     $('st-' + k).textContent = stampText(at);
     $('st-' + k).classList.remove('dirty');
     toast(`${FIELD_KO[k]}을(를) 저장했습니다`);
   }catch(err){
-    console.error(err); btn.disabled = false; toast('저장에 실패했습니다. 네트워크를 확인해 주세요.');
-  }
+    console.error(err); toast('저장에 실패했습니다. 네트워크를 확인해 주세요.');
+  }finally{ btn.disabled = false; }
 }
 
 /* ── 실시간 구독 ── */
@@ -833,9 +889,11 @@ FIELDS.forEach(k => {
     if((e.metaKey || e.ctrlKey) && e.key === 'Enter'){ e.preventDefault(); saveFocus(k); return; }
     if(e.key === 'Enter' && !e.shiftKey && !e.metaKey && !e.ctrlKey) handleListEnter(ta, k, e);
   });
+  $('view-' + k).addEventListener('click', () => startEditNote(k));
+  $('btn-' + k).addEventListener('click', () => {
+    st.editing[k] ? saveFocus(k) : startEditNote(k);
+  });
 });
-document.querySelectorAll('[data-save]').forEach(b =>
-  b.addEventListener('click', () => saveFocus(b.dataset.save)));
 window.addEventListener('beforeunload', e => {
   if(FIELDS.some(k => st.dirty[k])){ e.preventDefault(); e.returnValue = ''; }
 });
