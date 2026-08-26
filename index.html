@@ -95,6 +95,14 @@ button{cursor:pointer;border:none;background:none}
 .cell.today .dnum{background:var(--orange);color:#fff;border-radius:var(--r-xs);
   padding:2px 7px;display:inline-block;align-self:flex-start}
 .cell.has{background:#FFFDFA}
+/* 공휴일 */
+.cell.holi{background:#FFF7F7}
+.cell.holi.has{background:#FFF6F3}
+.cell.holi .dnum{color:var(--error)}
+.cell.holi.today .dnum{background:var(--error);color:#fff}
+.hname{font-size:10.5px;font-weight:700;color:var(--error);line-height:1.2;letter-spacing:-.3px;
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-top:-2px}
+.mhname{color:var(--error);font-weight:700}
 .chip{display:block;line-height:1.3;color:var(--ink);border-left:3px solid var(--gray);
   padding:3px 5px;background:var(--surface);border-radius:0 var(--r-xs) var(--r-xs) 0;overflow:hidden}
 .chip .t{display:block;font-family:var(--font-num);font-variant-numeric:tabular-nums;
@@ -241,6 +249,7 @@ textarea.note:focus{border-color:var(--orange);box-shadow:0 0 0 2px rgba(245,130
   .chip{padding:1px 2px 2px;border-left-width:2px}
   .chip .t{font-size:9.5px;letter-spacing:-.4px}
   .chip .n{display:block;font-size:10px;line-height:1.3;font-weight:700;letter-spacing:-.4px}
+  .hname{font-size:9px;letter-spacing:-.5px}
   .more{font-size:9.5px;padding-left:2px}
   .ymlabel{font-size:22px;min-width:0}
   .ml-hint{display:block}
@@ -453,6 +462,40 @@ const kind  = t => ALIAS[t] || t || '기타';
 const COLOR = Object.fromEntries(TYPES.map(t => [t.key, t.color]));
 const INK   = Object.fromEntries(TYPES.map(t => [t.key, t.ink]));
 const DOW   = ['일','월','화','수','목','금','토'];
+
+/* ── 대한민국 공휴일 (음력 공휴일·대체공휴일 포함) ── */
+const HOLIDAYS = {
+  // 2026
+  '2026-01-01':'신정',
+  '2026-02-16':'설날 연휴', '2026-02-17':'설날', '2026-02-18':'설날 연휴',
+  '2026-03-01':'삼일절',    '2026-03-02':'대체공휴일',
+  '2026-05-01':'근로자의날', '2026-05-05':'어린이날',
+  '2026-05-24':'부처님오신날','2026-05-25':'대체공휴일',
+  '2026-06-03':'지방선거일', '2026-06-06':'현충일',
+  '2026-08-15':'광복절',    '2026-08-17':'대체공휴일',
+  '2026-09-24':'추석 연휴', '2026-09-25':'추석', '2026-09-26':'추석 연휴',
+  '2026-10-03':'개천절',    '2026-10-05':'대체공휴일', '2026-10-09':'한글날',
+  '2026-12-25':'성탄절',
+  // 2027
+  '2027-01-01':'신정',
+  '2027-02-06':'설날 연휴', '2027-02-07':'설날', '2027-02-08':'설날 연휴', '2027-02-09':'대체공휴일',
+  '2027-03-01':'삼일절',
+  '2027-05-01':'근로자의날', '2027-05-05':'어린이날', '2027-05-13':'부처님오신날',
+  '2027-06-06':'현충일',
+  '2027-08-15':'광복절',    '2027-08-16':'대체공휴일',
+  '2027-09-14':'추석 연휴', '2027-09-15':'추석', '2027-09-16':'추석 연휴',
+  '2027-10-03':'개천절',    '2027-10-04':'대체공휴일',
+  '2027-10-09':'한글날',    '2027-10-11':'대체공휴일',
+  '2027-12-25':'성탄절',    '2027-12-27':'대체공휴일',
+  // 2028
+  '2028-01-01':'신정',
+  '2028-01-26':'설날 연휴', '2028-01-27':'설날', '2028-01-28':'설날 연휴',
+  '2028-03-01':'삼일절',
+  '2028-05-01':'근로자의날', '2028-05-02':'부처님오신날', '2028-05-05':'어린이날',
+  '2028-06-06':'현충일',    '2028-08-15':'광복절',
+  '2028-10-02':'추석 연휴', '2028-10-03':'추석·개천절', '2028-10-04':'추석 연휴', '2028-10-05':'대체공휴일',
+  '2028-10-09':'한글날',    '2028-12-25':'성탄절'
+};
 const FIELDS = ['quarterly','detail','message'];
 const FIELD_KO = { quarterly:'분기 중점사항', detail:'분기 프로모션', message:'센터장 전달사항' };
 const FIELD_PH = {
@@ -547,15 +590,16 @@ function renderCalendar(){
     const ds  = `${st.year}-${pad(st.month+1)}-${pad(dayNo)}`;
     const dow = i % 7;
     const evs = eventsOn(ds);
+    const holi = HOLIDAYS[ds];
     const cls = ['cell', dow===0?'sun':'', dow===6?'sat':'',
-                 ds===TODAY?'today':'', evs.length?'has':''].filter(Boolean).join(' ');
+                 holi?'holi':'', ds===TODAY?'today':'', evs.length?'has':''].filter(Boolean).join(' ');
     const shown = evs.slice(0,3).map(e => `
       <span class="chip" style="border-left-color:${COLOR[kind(e.type)]||'#84888B'};color:${INK[kind(e.type)]||'#6C6C6C'}">
         ${e.time ? `<span class="t">${esc(e.time)}</span>` : ''}<span class="n">${esc(e.title)}</span>
       </span>`).join('');
     const more = evs.length > 3 ? `<span class="more">+${evs.length-3}건 더</span>` : '';
     html += `<button type="button" class="${cls}" data-d="${ds}">
-      <span class="dnum">${dayNo}</span>${shown}${more}</button>`;
+      <span class="dnum">${dayNo}</span>${holi ? `<span class="hname">${esc(holi)}</span>` : ''}${shown}${more}</button>`;
   }
   $('grid').innerHTML = html;
   $('grid').querySelectorAll('.cell[data-d]').forEach(c =>
@@ -606,7 +650,8 @@ function openModal(ds){
   st.modalDate = ds; st.editingId = null; st.confirmId = null;
   const d = new Date(ds + 'T00:00:00');
   $('modal-date').innerHTML =
-    `${d.getFullYear()}년 ${d.getMonth()+1}월 ${d.getDate()}일<span class="dow-k">(${DOW[d.getDay()]})</span>`;
+    `${d.getFullYear()}년 ${d.getMonth()+1}월 ${d.getDate()}일<span class="dow-k">(${DOW[d.getDay()]})` +
+    (HOLIDAYS[ds] ? ` <span class="mhname">${esc(HOLIDAYS[ds])}</span>` : '') + `</span>`;
   resetForm();
   renderEventList();
   $('backdrop').classList.add('open');
