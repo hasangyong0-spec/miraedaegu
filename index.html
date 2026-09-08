@@ -106,7 +106,7 @@ button{cursor:pointer;border:none;background:none}
 .chip{display:block;line-height:1.3;color:var(--ink);border-left:3px solid var(--gray);
   padding:3px 5px;background:var(--surface);border-radius:0 var(--r-xs) var(--r-xs) 0;overflow:hidden}
 .chip .t{display:block;font-family:var(--font-num);font-variant-numeric:tabular-nums;
-  font-weight:700;font-size:11px;letter-spacing:-.2px;opacity:.85}
+  font-weight:700;font-size:11px;letter-spacing:-.2px;opacity:.62}
 .chip .n{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;
   font-size:12px;font-weight:700;overflow-wrap:anywhere;word-break:break-word}
 .more{font-size:11px;color:var(--muted);font-weight:600;padding-left:3px}
@@ -451,23 +451,24 @@ const focusRef  = ref(db, ROOT + '/focus');
 
 /* ── 상수 ── */
 /* color = 태그·범례·달력 좌측 띠 / ink = 달력 일정명 글자색 */
+/* color = 태그·범례·달력 좌측 띠 / tint = 달력 일정 음영 배경 */
 const TYPES = [
-  { key:'세미나',   color:'#F58220', ink:'#CB6015' },  // 주황
-  { key:'교육',     color:'#043B72', ink:'#043B72' },  // 파랑
-  { key:'야간상담', color:'#2E8540', ink:'#256E36' },  // 진한 초록
-  { key:'기타',     color:'#84888B', ink:'#6C6C6C' }   // 회색
+  { key:'세미나', color:'#F58220', tint:'#FCE6D2' },  // 주황 음영
+  { key:'교육',   color:'#043B72', tint:'#DCE6F1' },  // 파랑 음영
+  { key:'야근',   color:'#2E8540', tint:'#DAEBDF' },  // 초록 음영
+  { key:'기타',   color:'#84888B', tint:'#E6E7E8' }   // 회색 음영
 ];
-/* 예전 구분(회의·휴가)으로 저장된 일정도 기록 그대로 표시 */
+/* 예전 구분(회의·휴가·야간상담)으로 저장된 일정도 기록 그대로 표시 */
 const LEGACY = {
-  '휴가': { color:'#6DB33F', ink:'#4A7C1C' },
-  '회의': { color:'#6DB33F', ink:'#4A7C1C' }
+  '야간상담': { color:'#2E8540', tint:'#DAEBDF' },
+  '휴가':     { color:'#6DB33F', tint:'#E4F0D8' },
+  '회의':     { color:'#6DB33F', tint:'#E4F0D8' }
 };
+const ALL_TYPES = [...TYPES, ...Object.entries(LEGACY).map(([key,v]) => ({ key, ...v }))];
 const TYPE_KEYS = TYPES.map(t => t.key);
 const kind  = t => t || '기타';
-const COLOR = { ...Object.fromEntries(TYPES.map(t => [t.key, t.color])),
-                ...Object.fromEntries(Object.entries(LEGACY).map(([k,v]) => [k, v.color])) };
-const INK   = { ...Object.fromEntries(TYPES.map(t => [t.key, t.ink])),
-                ...Object.fromEntries(Object.entries(LEGACY).map(([k,v]) => [k, v.ink])) };
+const COLOR = Object.fromEntries(ALL_TYPES.map(t => [t.key, t.color]));
+const TINT  = Object.fromEntries(ALL_TYPES.map(t => [t.key, t.tint]));
 const DOW   = ['일','월','화','수','목','금','토'];
 
 /* ── 대한민국 공휴일 (음력 공휴일·대체공휴일 포함) ── */
@@ -601,7 +602,7 @@ function renderCalendar(){
     const cls = ['cell', dow===0?'sun':'', dow===6?'sat':'',
                  holi?'holi':'', ds===TODAY?'today':'', evs.length?'has':''].filter(Boolean).join(' ');
     const shown = evs.slice(0,3).map(e => `
-      <span class="chip" style="border-left-color:${COLOR[kind(e.type)]||'#84888B'};color:${INK[kind(e.type)]||'#6C6C6C'}">
+      <span class="chip" style="border-left-color:${COLOR[kind(e.type)]||'#84888B'};background:${TINT[kind(e.type)]||'#E6E7E8'}">
         ${e.time ? `<span class="t">${esc(e.time)}</span>` : ''}<span class="n">${esc(e.title)}</span>
       </span>`).join('');
     const more = evs.length > 3 ? `<span class="more">+${evs.length-3}건 더</span>` : '';
