@@ -458,15 +458,16 @@ const TYPES = [
   { key:'야근',   color:'#2E8540', tint:'#DAEBDF' },  // 초록 음영
   { key:'기타',   color:'#84888B', tint:'#E6E7E8' }   // 회색 음영
 ];
-/* 예전 구분(회의·휴가·야간상담)으로 저장된 일정도 기록 그대로 표시 */
+/* 이름만 바뀐 구분 — 예전에 저장된 일정도 현재 이름으로 표시 */
+const ALIAS = { '야간상담':'야근' };
+/* 지금은 쓰지 않는 예전 구분 — 기록 그대로 표시 */
 const LEGACY = {
-  '야간상담': { color:'#2E8540', tint:'#DAEBDF' },
-  '휴가':     { color:'#6DB33F', tint:'#E4F0D8' },
-  '회의':     { color:'#6DB33F', tint:'#E4F0D8' }
+  '휴가': { color:'#6DB33F', tint:'#E4F0D8' },
+  '회의': { color:'#6DB33F', tint:'#E4F0D8' }
 };
 const ALL_TYPES = [...TYPES, ...Object.entries(LEGACY).map(([key,v]) => ({ key, ...v }))];
 const TYPE_KEYS = TYPES.map(t => t.key);
-const kind  = t => t || '기타';
+const kind  = t => ALIAS[t] || t || '기타';
 const COLOR = Object.fromEntries(ALL_TYPES.map(t => [t.key, t.color]));
 const TINT  = Object.fromEntries(ALL_TYPES.map(t => [t.key, t.tint]));
 const DOW   = ['일','월','화','수','목','금','토'];
@@ -745,7 +746,8 @@ function startEdit(id){
   $('f-time').value   = e.time   || '';
   $('f-place').value  = e.place  || '';
   $('f-target').value = e.target || '';
-  setType(TYPE_KEYS.includes(e.type) ? e.type : '기타');   // 없어진 구분이면 기타로
+  const k0 = kind(e.type);
+  setType(TYPE_KEYS.includes(k0) ? k0 : '기타');           // 없어진 구분이면 기타로
   $('f-err').textContent = '';
   renderEventList();
   $('f-title').focus();
